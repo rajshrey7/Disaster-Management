@@ -115,6 +115,13 @@ enum AlertStatus {
   RESOLVED
 }
 
+// Quiz related enums
+enum QuizQuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
+
 // Enhanced User model with Indian regional support
 model User {
   id                 String              @id @default(cuid())
@@ -129,7 +136,8 @@ model User {
   city               String?             // City/town
   postalCode         String?             // PIN code
   // Geographic region for content localization
-  geographicRegion  GeographicRegion?   // Himalayan, Coastal, etc.
+  geographicRegionId String?
+  geographicRegion   GeographicRegion?  @relation(fields: [geographicRegionId], references: [id])
   phone              String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
@@ -144,6 +152,7 @@ model User {
   emergencyContacts  UserEmergencyContact[]
   drillAttempts      DrillAttempt[]
   learningPathways   LearningPathway[]
+  quizAttempts       QuizAttempt[]
 
   @@map("users")
 }
@@ -165,6 +174,7 @@ model GeographicRegion {
   modules     LearningModule[]
   drills      VirtualDrill[]
   contacts    EmergencyContact[]
+  alerts      Alert[]
 
   @@map("geographic_regions")
 }
@@ -215,6 +225,8 @@ model LearningModule {
   lessons          Lesson[]
   userProgress     UserProgress[]
   learningPathways LearningPathway[]
+  courseModules    CourseModule[]
+  quizzes          Quiz[]
 
   @@map("learning_modules")
 }
@@ -233,6 +245,7 @@ model Lesson {
   regionalExamples String?    // JSON array of region-specific examples
   module       LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   userProgress UserProgress[]
+  quizzes      Quiz[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
@@ -430,6 +443,110 @@ model LearningPathway {
 
   @@unique([userId, moduleId])
   @@map("learning_pathways")
+}
+
+// Courses map CBSE/NCERT curriculum to modules/lessons
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  gradeLevel  String   // e.g., "Class 6", "Class 10"
+  subject     String   // e.g., "Disaster Management"
+  description String?
+  tags        String?  // JSON array of tags
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  courseModules CourseModule[]
+
+  @@map("courses")
+}
+
+// Junction between Course and LearningModule with ordering and core/elective flags
+model CourseModule {
+  id        String         @id @default(cuid())
+  courseId  String
+  moduleId  String
+  order     Int            @default(1)
+  isCore    Boolean        @default(true)
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module    LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, moduleId])
+  @@map("course_modules")
+}
+
+// Quiz associated with a Lesson or a Module
+model Quiz {
+  id           String         @id @default(cuid())
+  title        String
+  description  String?
+  timeLimitSec Int?           // Optional time limit
+  totalPoints  Int            @default(0)
+  passingScore Int            @default(70)
+  isActive     Boolean        @default(true)
+
+  // Associations (either lesson or module based)
+  lessonId     String?
+  moduleId     String?
+  lesson       Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  module       LearningModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  // Relations
+  questions    QuizQuestion[]
+  attempts     QuizAttempt[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id        String          @id @default(cuid())
+  quizId    String
+  text      String
+  type      QuizQuestionType @default(SINGLE_CHOICE)
+  points    Int             @default(1)
+  order     Int
+
+  quiz      Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options   QuizOption[]
+
+  @@map("quiz_questions")
+}
+
+model QuizOption {
+  id          String        @id @default(cuid())
+  questionId  String
+  text        String
+  isCorrect   Boolean       @default(false)
+
+  question    QuizQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_options")
+}
+
+// Tracks user attempts on quizzes
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int      @default(0)
+  maxScore    Int      @default(0)
+  passed      Boolean  @default(false)
+  responses   String?  // JSON array of user answers
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([quizId])
+  @@map("quiz_attempts")
 }
 
 model Alert {

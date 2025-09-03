@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
+import { requireRole } from "@/lib/rbac"
 
 // Mock data for users
 const users = [
@@ -145,7 +146,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { action, data } = body
@@ -210,6 +211,9 @@ export async function POST(request: Request) {
         })
 
       case 'broadcast':
+        {
+        const authError = requireRole(request, ['ADMINISTRATOR'])
+        if (authError) return authError
         const { message, broadcastType, priority: broadcastPriority, targetRegions } = data
         
         const broadcast = {
@@ -230,6 +234,7 @@ export async function POST(request: Request) {
           data: broadcast,
           message: "Broadcast sent successfully"
         })
+        }
 
       case 'update_status':
         const { userId, status, location } = data
