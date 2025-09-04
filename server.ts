@@ -40,11 +40,7 @@ async function createCustomServer() {
       }
     });
 
-    // Setup socket handlers and get the broadcast function
-    const { broadcastAlert } = setupSocket(io);
-
-    // Make the broadcast function available globally for the alerts API
-    (global as any).broadcastAlert = broadcastAlert;
+    setupSocket(io);
 
     // Start the server
     server.listen(currentPort, hostname, () => {

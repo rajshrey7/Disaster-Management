@@ -188,7 +188,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create module with enhanced localization
-    const module = await db.learningModule.create({
+    const moduleRecord = await db.learningModule.create({
       data: {
         title,
         description,
@@ -214,17 +214,17 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Module created successfully',
       data: {
-        ...module,
+        ...moduleRecord,
         regionalContext: {
-          region: module.geographicRegion?.name,
-          languages: module.languages ? JSON.parse(module.languages) : [],
-          regionalVariants: module.regionalVariants ? JSON.parse(module.regionalVariants) : [],
-          seasonalRelevance: module.seasonalRelevance ? JSON.parse(module.seasonalRelevance) : []
+          region: moduleRecord.geographicRegion?.name,
+          languages: moduleRecord.languages ? JSON.parse(moduleRecord.languages) : [],
+          regionalVariants: moduleRecord.regionalVariants ? JSON.parse(moduleRecord.regionalVariants) : [],
+          seasonalRelevance: moduleRecord.seasonalRelevance ? JSON.parse(moduleRecord.seasonalRelevance) : []
         },
         metadata: {
-          tags: module.tags ? JSON.parse(module.tags) : [],
-          prerequisites: module.prerequisites ? JSON.parse(module.prerequisites) : [],
-          learningOutcomes: module.learningOutcomes ? JSON.parse(module.learningOutcomes) : []
+          tags: moduleRecord.tags ? JSON.parse(moduleRecord.tags) : [],
+          prerequisites: moduleRecord.prerequisites ? JSON.parse(moduleRecord.prerequisites) : [],
+          learningOutcomes: moduleRecord.learningOutcomes ? JSON.parse(moduleRecord.learningOutcomes) : []
         }
       }
     }, { status: 201 });

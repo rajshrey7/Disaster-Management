@@ -99,11 +99,11 @@ export async function POST(request: Request) {
     }
 
     // Verify module exists
-    const module = await db.learningModule.findUnique({
+    const moduleRecord = await db.learningModule.findUnique({
       where: { id: moduleId }
     })
 
-    if (!module) {
+    if (!moduleRecord) {
       return NextResponse.json(
         { success: false, message: "Module not found" },
         { status: 404 }

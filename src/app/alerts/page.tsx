@@ -64,181 +64,22 @@ export default function AlertsPage() {
   ]
 
   const alerts = [
-    {
-      id: 1,
-      title: "Heavy Rainfall Warning",
-      description: "Heavy to very heavy rainfall expected over the next 48 hours. Possible waterlogging in low-lying areas.",
-      type: "weather",
-      severity: "high",
-      region: "mumbai",
-      issued: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      expires: new Date(Date.now() + 46 * 60 * 60 * 1000), // 46 hours from now
-      status: "active",
-      icon: Cloud,
-      color: "blue",
-      actions: [
-        "Avoid unnecessary travel",
-        "Stay indoors during heavy rain",
-        "Keep emergency contacts ready",
-        "Move to higher ground if in low-lying areas"
-      ],
-      source: "India Meteorological Department",
-      contact: "022-26793222"
-    },
-    {
-      id: 2,
-      title: "Thunderstorm Alert",
-      description: "Thunderstorms with lightning and strong winds expected this evening. Take necessary precautions.",
-      type: "weather",
-      severity: "medium",
-      region: "delhi",
-      issued: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-      expires: new Date(Date.now() + 7 * 60 * 60 * 1000), // 7 hours from now
-      status: "active",
-      icon: Zap,
-      color: "yellow",
-      actions: [
-        "Unplug electrical appliances",
-        "Avoid open areas",
-        "Stay away from tall structures",
-        "Keep vehicles parked safely"
-      ],
-      source: "Regional Meteorological Centre",
-      contact: "011-26793222"
-    },
-    {
-      id: 3,
-      title: "Air Quality Warning",
-      description: "Air quality index has reached hazardous levels. Sensitive groups should avoid outdoor activities.",
-      type: "environmental",
-      severity: "high",
-      region: "delhi",
-      issued: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      expires: new Date(Date.now() + 12 * 60 * 60 * 1000), // 12 hours from now
-      status: "active",
-      icon: Wind,
-      color: "orange",
-      actions: [
-        "Wear N95 masks outdoors",
-        "Keep windows closed",
-        "Use air purifiers indoors",
-        "Avoid strenuous outdoor activities"
-      ],
-      source: "Central Pollution Control Board",
-      contact: "011-26701727"
-    },
-    {
-      id: 4,
-      title: "Heat Wave Alert",
-      description: "Severe heat wave conditions expected. Maximum temperature may reach 45°C.",
-      type: "weather",
-      severity: "high",
-      region: "ahmedabad",
-      issued: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-      expires: new Date(Date.now() + 16 * 60 * 60 * 1000), // 16 hours from now
-      status: "active",
-      icon: Thermometer,
-      color: "red",
-      actions: [
-        "Stay hydrated",
-        "Avoid direct sun exposure",
-        "Wear light-colored clothing",
-        "Check on elderly neighbors"
-      ],
-      source: "India Meteorological Department",
-      contact: "079-26793222"
-    },
-    {
-      id: 5,
-      title: "Flood Watch",
-      description: "River levels are rising due to heavy rainfall. Monitor situation closely.",
-      type: "flood",
-      severity: "medium",
-      region: "kolkata",
-      issued: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-      expires: new Date(Date.now() + 18 * 60 * 60 * 1000), // 18 hours from now
-      status: "active",
-      icon: Waves,
-      color: "blue",
-      actions: [
-        "Monitor river levels",
-        "Prepare evacuation plans",
-        "Keep emergency kit ready",
-        "Stay informed through official channels"
-      ],
-      source: "State Disaster Management Authority",
-      contact: "033-22143226"
-    },
-    {
-      id: 6,
-      title: "Cyclone Watch",
-      description: "Cyclonic storm developing in Bay of Bengal. Monitor weather updates regularly.",
-      type: "weather",
-      severity: "high",
-      region: "chennai",
-      issued: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24 hours ago
-      expires: new Date(Date.now() + 72 * 60 * 60 * 1000), // 72 hours from now
-      status: "active",
-      icon: Wind,
-      color: "purple",
-      actions: [
-        "Secure loose objects",
-        "Stock emergency supplies",
-        "Plan evacuation routes",
-        "Keep important documents safe"
-      ],
-      source: "India Meteorological Department",
-      contact: "044-25384520"
-    },
-    {
-      id: 7,
-      title: "Earthquake Preparedness",
-      description: "Seismic activity detected in the region. Review earthquake safety procedures.",
-      type: "seismic",
-      severity: "low",
-      region: "pune",
-      issued: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-      expires: new Date(Date.now() + 23 * 60 * 60 * 1000), // 23 hours from now
-      status: "active",
-      icon: AlertTriangle,
-      color: "orange",
-      actions: [
-        "Identify safe spots in your building",
-        "Practice drop, cover, and hold",
-        "Secure heavy furniture",
-        "Prepare emergency kit"
-      ],
-      source: "National Centre for Seismology",
-      contact: "011-26701700"
-    },
-    {
-      id: 8,
-      title: "Power Outage Alert",
-      description: "Scheduled maintenance work may cause power interruptions in your area.",
-      type: "utility",
-      severity: "low",
-      region: "bangalore",
-      issued: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
-      expires: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours from now
-      status: "active",
-      icon: Zap,
-      color: "yellow",
-      actions: [
-        "Charge electronic devices",
-        "Keep flashlights ready",
-        "Plan alternative power sources",
-        "Save work on computers"
-      ],
-      source: "Bangalore Electricity Supply Company",
-      contact: "080-22873333"
-    }
+    // ... (alert data remains the same)
+    { id: 1, title: "Heavy Rainfall Warning", description: "Heavy to very heavy rainfall expected over the next 48 hours. Possible waterlogging in low-lying areas.", type: "weather", severity: "high", region: "mumbai", issued: new Date(Date.now() - 2 * 60 * 60 * 1000), expires: new Date(Date.now() + 46 * 60 * 60 * 1000), status: "active", icon: Cloud, color: "blue", actions: ["Avoid unnecessary travel", "Stay indoors during heavy rain", "Keep emergency contacts ready", "Move to higher ground if in low-lying areas"], source: "India Meteorological Department", contact: "022-26793222" },
+    { id: 2, title: "Thunderstorm Alert", description: "Thunderstorms with lightning and strong winds expected this evening. Take necessary precautions.", type: "weather", severity: "medium", region: "delhi", issued: new Date(Date.now() - 5 * 60 * 60 * 1000), expires: new Date(Date.now() + 7 * 60 * 60 * 1000), status: "active", icon: Zap, color: "yellow", actions: ["Unplug electrical appliances", "Avoid open areas", "Stay away from tall structures", "Keep vehicles parked safely"], source: "Regional Meteorological Centre", contact: "011-26793222" },
+    { id: 3, title: "Air Quality Warning", description: "Air quality index has reached hazardous levels. Sensitive groups should avoid outdoor activities.", type: "environmental", severity: "high", region: "delhi", issued: new Date(Date.now() - 12 * 60 * 60 * 1000), expires: new Date(Date.now() + 12 * 60 * 60 * 1000), status: "active", icon: Wind, color: "orange", actions: ["Wear N95 masks outdoors", "Keep windows closed", "Use air purifiers indoors", "Avoid strenuous outdoor activities"], source: "Central Pollution Control Board", contact: "011-26701727" },
+    { id: 4, title: "Heat Wave Alert", description: "Severe heat wave conditions expected. Maximum temperature may reach 45°C.", type: "weather", severity: "high", region: "ahmedabad", issued: new Date(Date.now() - 8 * 60 * 60 * 1000), expires: new Date(Date.now() + 16 * 60 * 60 * 1000), status: "active", icon: Thermometer, color: "red", actions: ["Stay hydrated", "Avoid direct sun exposure", "Wear light-colored clothing", "Check on elderly neighbors"], source: "India Meteorological Department", contact: "079-26793222" },
+    { id: 5, title: "Flood Watch", description: "River levels are rising due to heavy rainfall. Monitor situation closely.", type: "flood", severity: "medium", region: "kolkata", issued: new Date(Date.now() - 6 * 60 * 60 * 1000), expires: new Date(Date.now() + 18 * 60 * 60 * 1000), status: "active", icon: Waves, color: "blue", actions: ["Monitor river levels", "Prepare evacuation plans", "Keep emergency kit ready", "Stay informed through official channels"], source: "State Disaster Management Authority", contact: "033-22143226" },
+    { id: 6, title: "Cyclone Watch", description: "Cyclonic storm developing in Bay of Bengal. Monitor weather updates regularly.", type: "weather", severity: "high", region: "chennai", issued: new Date(Date.now() - 24 * 60 * 60 * 1000), expires: new Date(Date.now() + 72 * 60 * 60 * 1000), status: "active", icon: Wind, color: "purple", actions: ["Secure loose objects", "Stock emergency supplies", "Plan evacuation routes", "Keep important documents safe"], source: "India Meteorological Department", contact: "044-25384520" },
+    { id: 7, title: "Earthquake Preparedness", description: "Seismic activity detected in the region. Review earthquake safety procedures.", type: "seismic", severity: "low", region: "pune", issued: new Date(Date.now() - 1 * 60 * 60 * 1000), expires: new Date(Date.now() + 23 * 60 * 60 * 1000), status: "active", icon: AlertTriangle, color: "orange", actions: ["Identify safe spots in your building", "Practice drop, cover, and hold", "Secure heavy furniture", "Prepare emergency kit"], source: "National Centre for Seismology", contact: "011-26701700" },
+    { id: 8, title: "Power Outage Alert", description: "Scheduled maintenance work may cause power interruptions in your area.", type: "utility", severity: "low", region: "bangalore", issued: new Date(Date.now() - 3 * 60 * 60 * 1000), expires: new Date(Date.now() + 5 * 60 * 60 * 1000), status: "active", icon: Zap, color: "yellow", actions: ["Charge electronic devices", "Keep flashlights ready", "Plan alternative power sources", "Save work on computers"], source: "Bangalore Electricity Supply Company", contact: "080-22873333" }
   ]
 
   const filteredAlerts = alerts.filter(alert => {
     const matchesRegion = selectedRegion === "all" || alert.region === selectedRegion
     const matchesType = alertType === "all" || alert.type === alertType
     const matchesSearch = alert.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         alert.description.toLowerCase().includes(searchTerm.toLowerCase())
+                          alert.description.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesRegion && matchesType && matchesSearch
   })
 
@@ -276,6 +117,16 @@ export default function AlertsPage() {
       default: return Info
     }
   }
+
+  // IMPROVEMENT: Map for Tailwind CSS classes to avoid purging in production
+  const colorClasses: { [key: string]: { bg: string; text: string } } = {
+    blue: { bg: 'bg-blue-100', text: 'text-blue-600' },
+    yellow: { bg: 'bg-yellow-100', text: 'text-yellow-600' },
+    orange: { bg: 'bg-orange-100', text: 'text-orange-600' },
+    red: { bg: 'bg-red-100', text: 'text-red-600' },
+    purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
+    default: { bg: 'bg-gray-100', text: 'text-gray-600' },
+  };
 
   const markAsRead = (alertId: number) => {
     // In a real app, this would update the alert status
@@ -418,7 +269,8 @@ export default function AlertsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {filteredAlerts.length > 0 ? getTimeAgo(Math.min(...filteredAlerts.map(a => a.issued.getTime()))) : 'N/A'}
+                {/* FIX: Wrap the timestamp number in new Date() before passing to the function */}
+                {filteredAlerts.length > 0 ? getTimeAgo(new Date(Math.min(...filteredAlerts.map(a => a.issued.getTime())))) : 'N/A'}
               </div>
             </CardContent>
           </Card>
@@ -441,10 +293,16 @@ export default function AlertsPage() {
           <div className="space-y-4">
             {filteredAlerts
               .filter(alert => alert.status === "active")
-              .sort((a, b) => b.severity.localeCompare(a.severity))
+              // IMPROVEMENT: Sort by severity correctly (High > Medium > Low)
+              .sort((a, b) => {
+                const severityOrder = { high: 3, medium: 2, low: 1 };
+                return (severityOrder[b.severity as keyof typeof severityOrder] || 0) - 
+                       (severityOrder[a.severity as keyof typeof severityOrder] || 0);
+              })
               .map((alert) => {
-                const AlertIcon = getAlertTypeIcon(alert.type)
-                const isExpiringSoon = alert.expires.getTime() - currentTime.getTime() < 24 * 60 * 60 * 1000 // Less than 24 hours
+                const AlertIcon = getAlertTypeIcon(alert.type);
+                const alertColors = colorClasses[alert.color] || colorClasses.default;
+                const isExpiringSoon = alert.expires.getTime() - currentTime.getTime() < 24 * 60 * 60 * 1000; // Less than 24 hours
                 
                 return (
                   <Card key={alert.id} className={`hover:shadow-lg transition-shadow ${
@@ -456,8 +314,8 @@ export default function AlertsPage() {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-start space-x-4 flex-1">
                           <div className="flex-shrink-0">
-                            <div className={`w-12 h-12 bg-${alert.color}-100 rounded-lg flex items-center justify-center`}>
-                              <AlertIcon className={`w-6 h-6 text-${alert.color}-600`} />
+                            <div className={`w-12 h-12 ${alertColors.bg} rounded-lg flex items-center justify-center`}>
+                              <AlertIcon className={`w-6 h-6 ${alertColors.text}`} />
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">

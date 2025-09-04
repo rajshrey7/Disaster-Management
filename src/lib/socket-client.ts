@@ -39,7 +39,7 @@ export interface MessageEvent {
 export class SocketClient {
   private socket: Socket | null = null;
   private config: SocketConfig;
-  private eventHandlers: Map<string, Function[]> = new Map();
+  private eventHandlers: Map<string, ((...args: any[]) => void)[]> = new Map();
 
   constructor(config: SocketConfig = {}) {
     this.config = {
@@ -149,7 +149,7 @@ export class SocketClient {
   }
 
   // Add event listener
-  on(event: string, handler: Function): void {
+  on(event: string, handler: (...args: any[]) => void): void {
     if (!this.eventHandlers.has(event)) {
       this.eventHandlers.set(event, []);
     }
@@ -157,7 +157,7 @@ export class SocketClient {
   }
 
   // Remove event listener
-  off(event: string, handler: Function): void {
+  off(event: string, handler: (...args: any[]) => void): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
       const index = handlers.indexOf(handler);

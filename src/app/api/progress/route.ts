@@ -132,7 +132,7 @@ export async function PUT(request: Request) {
 
     // Update module progress
     if (moduleId && progress !== undefined) {
-      const module = await db.learningModule.findUnique({
+      const moduleRecord = await db.learningModule.findUnique({
         where: { id: moduleId },
         include: {
           _count: {
@@ -141,8 +141,8 @@ export async function PUT(request: Request) {
         }
       })
 
-      if (module) {
-        const totalLessons = module._count.lessons
+      if (moduleRecord) {
+        const totalLessons = moduleRecord._count.lessons
         const completedLessons = Math.floor((progress / 100) * totalLessons)
         const isCompleted = progress >= 100
 

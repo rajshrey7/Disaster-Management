@@ -1,0 +1,616 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Enhanced enums for Indian disaster management
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMINISTRATOR
+  EMERGENCY_RESPONDER
+  PARENT
+}
+
+enum ModuleCategory {
+  EARTHQUAKE
+  FLOOD
+  CYCLONE
+  FIRE
+  LANDSLIDE
+  DROUGHT
+  HEATWAVE
+  COLD_WAVE
+  BIOLOGICAL_HAZARD
+  CHEMICAL_HAZARD
+  NUCLEAR_HAZARD
+  TERRORISM
+  PANDEMIC
+  REGIONAL_HAZARDS
+  FIRST_AID
+  EMERGENCY_COMMUNICATION
+  EVACUATION_PROCEDURES
+  SHELTER_MANAGEMENT
+}
+
+enum ModuleDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum DrillType {
+  FIRE_SAFETY
+  EARTHQUAKE_RESPONSE
+  FLOOD_EVACUATION
+  MEDICAL_EMERGENCY
+  CHEMICAL_SPILL
+  BOMB_THREAT
+  ACTIVE_SHOOTER
+  NATURAL_DISASTER
+  PANDEMIC_RESPONSE
+  EVACUATION_DRILL
+  SHELTER_IN_PLACE
+  COMMUNICATION_DRILL
+}
+
+enum DrillDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum ContactCategory {
+  POLICE
+  FIRE
+  AMBULANCE
+  HOSPITAL
+  CIVIL_DEFENSE
+  NDMA
+  STATE_DISASTER_MANAGEMENT
+  DISTRICT_EMERGENCY_OPERATIONS
+  LOCAL_ADMINISTRATION
+  UTILITY_SERVICES
+  TRANSPORT
+  COMMUNICATION
+  VOLUNTEER_ORGANIZATIONS
+}
+
+enum AlertType {
+  WEATHER
+  ENVIRONMENTAL
+  FLOOD
+  SEISMIC
+  UTILITY
+  SECURITY
+  HEALTH
+  TRANSPORT
+  INFRASTRUCTURE
+  CIVIL_UNREST
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  RESOLVED
+}
+
+// Quiz related enums
+enum QuizQuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
+
+// Enhanced User model with Indian regional support
+model User {
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  name               String?
+  role               UserRole            @default(STUDENT)
+  institution        String?
+  location           String?
+  // Enhanced location fields for India
+  state              String?             // Indian state
+  district           String?             // District within state
+  city               String?             // City/town
+  postalCode         String?             // PIN code
+  // Geographic region for content localization
+  geographicRegionId String?
+  geographicRegion   GeographicRegion?  @relation(fields: [geographicRegionId], references: [id])
+  phone              String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  // Relations
+  profile            UserProfile?
+  progress           UserProgress[]
+  drillResults       DrillResult[]
+  messages           Message[]
+  callHistory        CallHistory[]
+  alertSubscriptions AlertSubscription[]
+  // New relations for enhanced features
+  emergencyContacts  UserEmergencyContact[]
+  drillAttempts      DrillAttempt[]
+  learningPathways   LearningPathway[]
+  quizAttempts       QuizAttempt[]
+
+  @@map("users")
+}
+
+// New model for geographic regions in India
+model GeographicRegion {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "Himalayan Region", "Coastal Odisha"
+  description String
+  states      String   // JSON array of states covered
+  districts   String   // JSON array of districts covered
+  hazards     String   // JSON array of common hazards
+  climate     String   // Climate characteristics
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Relations
+  users       User[]
+  modules     LearningModule[]
+  drills      VirtualDrill[]
+  contacts    EmergencyContact[]
+  alerts      Alert[]
+
+  @@map("geographic_regions")
+}
+
+model UserProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  grade             String?
+  department        String?
+  subjects          String? // JSON array of subjects
+  emergencyContact  String?
+  medicalConditions String?
+  avatar            String?
+  // Enhanced fields for Indian context
+  motherTongue      String?  // Regional language preference
+  preferredLanguage String?  // English, Hindi, or regional language
+  accessibilityNeeds String? // JSON array of accessibility requirements
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+// Enhanced LearningModule with regional localization
+model LearningModule {
+  id           String           @id @default(cuid())
+  title        String
+  description  String
+  difficulty   ModuleDifficulty
+  duration     Int // in minutes
+  category     ModuleCategory
+  content      String? // JSON content structure
+  isActive     Boolean          @default(true)
+  // Enhanced localization fields
+  geographicRegionId String?
+  geographicRegion   GeographicRegion? @relation(fields: [geographicRegionId], references: [id])
+  languages          String?           // JSON array of available languages
+  regionalVariants  String?           // JSON array of region-specific modifications
+  seasonalRelevance String?           // JSON array of relevant seasons
+  // Content metadata
+  tags             String?           // JSON array of tags
+  prerequisites    String?           // JSON array of required modules
+  learningOutcomes String?           // JSON array of expected outcomes
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  // Relations
+  lessons          Lesson[]
+  userProgress     UserProgress[]
+  learningPathways LearningPathway[]
+  courseModules    CourseModule[]
+  quizzes          Quiz[]
+
+  @@map("learning_modules")
+}
+
+model Lesson {
+  id           String         @id @default(cuid())
+  moduleId     String
+  title        String
+  description  String
+  content      String? // JSON content structure
+  duration    Int // in minutes
+  order       Int
+  // Enhanced content fields
+  mediaContent String?        // JSON array of images, videos, audio
+  interactiveElements String? // JSON array of interactive components
+  regionalExamples String?    // JSON array of region-specific examples
+  module       LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  userProgress UserProgress[]
+  quizzes      Quiz[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("lessons")
+}
+
+model UserProgress {
+  id               String         @id @default(cuid())
+  userId           String
+  moduleId         String
+  lessonId         String?
+  completedLessons Int            @default(0)
+  totalLessons     Int            @default(0)
+  progress         Float          @default(0) // 0-100 percentage
+  isCompleted      Boolean        @default(false)
+  lastAccessed     DateTime?
+  // Enhanced progress tracking
+  timeSpent        Int?           // Total time spent in minutes
+  quizScores       String?        // JSON array of quiz scores
+  completionDate   DateTime?
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module           LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lesson           Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@map("user_progress")
+}
+
+// Enhanced VirtualDrill with interactive scenario support
+model VirtualDrill {
+  id           String        @id @default(cuid())
+  title        String
+  description  String
+  type         DrillType
+  difficulty   DrillDifficulty
+  duration     Int // in minutes
+  scenario     String // JSON scenario data
+  isActive     Boolean       @default(true)
+  // Enhanced localization and interactivity
+  geographicRegionId String?
+  geographicRegion   GeographicRegion? @relation(fields: [geographicRegionId], references: [id])
+  languages          String?           // JSON array of available languages
+  regionalVariants  String?           // JSON array of region-specific scenarios
+  // Interactive features
+  branchingScenarios String?          // JSON array of decision trees
+  multimediaContent  String?          // JSON array of images, videos, audio
+  accessibility      String?          // JSON array of accessibility features
+  // Scoring and feedback
+  passingScore       Int              @default(70)
+  maxAttempts        Int              @default(3)
+  timeLimit          Int?             // Time limit in seconds
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  // Relations
+  steps              DrillStep[]
+  drillResults       DrillResult[]
+  drillAttempts      DrillAttempt[]
+
+  @@map("virtual_drills")
+}
+
+// Enhanced DrillStep with interactive choices
+model DrillStep {
+  id            String       @id @default(cuid())
+  drillId       String
+  title         String
+  description   String
+  choices       String // JSON array of choices with enhanced structure
+  correctChoice Int?
+  points        Int          @default(10)
+  order         Int
+  // Enhanced interactive features
+  scenarioText  String?      // Additional scenario context
+  mediaContent  String?      // JSON array of supporting media
+  feedback      String?      // JSON array of feedback for each choice
+  consequences  String?      // JSON array of consequences for each choice
+  // Branching logic
+  nextStepLogic String?      // JSON logic for determining next step
+  conditionalSteps String?   // JSON array of conditional step sequences
+  drill         VirtualDrill @relation(fields: [drillId], references: [id], onDelete: Cascade)
+
+  @@map("drill_steps")
+}
+
+// Enhanced DrillResult with detailed tracking
+model DrillResult {
+  id            String       @id @default(cuid())
+  userId        String
+  drillId       String
+  userResponses String // JSON array of responses with enhanced structure
+  score         Int
+  maxScore      Int
+  timeTaken     Int // in seconds
+  passed        Boolean
+  completedAt   DateTime
+  // Enhanced result tracking
+  attemptNumber Int           @default(1)
+  decisionPath  String?       // JSON array of decisions made
+  learningOutcomes String?    // JSON array of learning insights
+  improvementAreas String?    // JSON array of areas for improvement
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drill         VirtualDrill @relation(fields: [drillId], references: [id], onDelete: Cascade)
+
+  @@map("drill_results")
+}
+
+// New model for tracking drill attempts with detailed analytics
+model DrillAttempt {
+  id            String       @id @default(cuid())
+  userId        String
+  drillId       String
+  attemptNumber Int
+  startTime     DateTime
+  endTime       DateTime?
+  // Detailed attempt tracking
+  currentStep   Int          @default(1)
+  responses     String?      // JSON array of responses so far
+  timePerStep   String?      // JSON array of time spent per step
+  hintsUsed     String?      // JSON array of hints accessed
+  // Learning analytics
+  confidenceLevel String?    // User's self-reported confidence
+  difficultyRating String?   // User's rating of difficulty
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drill         VirtualDrill @relation(fields: [drillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, drillId, attemptNumber])
+  @@map("drill_attempts")
+}
+
+// Enhanced EmergencyContact with regional support
+model EmergencyContact {
+  id          String          @id @default(cuid())
+  name        String
+  number      String
+  category    ContactCategory
+  description String?
+  available24x7 Boolean       @default(true)
+  location    String?
+  website     String?
+  isActive    Boolean         @default(true)
+  // Enhanced regional support
+  geographicRegionId String?
+  geographicRegion   GeographicRegion? @relation(fields: [geographicRegionId], references: [id])
+  state              String?
+  district           String?
+  city               String?
+  // Contact details
+  alternateNumbers   String?  // JSON array of backup numbers
+  email              String?
+  socialMedia        String?  // JSON array of social media handles
+  // Operational details
+  responseTime       String?  // Expected response time
+  coverageArea       String?  // Geographic coverage area
+  specializations    String?  // JSON array of specializations
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  // Relations
+  userEmergencyContacts UserEmergencyContact[]
+
+  @@map("emergency_contacts")
+}
+
+// New model for user-specific emergency contacts
+model UserEmergencyContact {
+  id                String          @id @default(cuid())
+  userId            String
+  contactId         String
+  isPrimary         Boolean         @default(false)
+  relationship      String?         // Family, Friend, Neighbor, etc.
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contact           EmergencyContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contactId])
+  @@map("user_emergency_contacts")
+}
+
+// New model for personalized learning pathways
+model LearningPathway {
+  id          String   @id @default(cuid())
+  userId      String
+  moduleId    String
+  // Pathway configuration
+  priority    Int      @default(1) // 1 = highest priority
+  targetDate  DateTime?
+  isCompleted Boolean  @default(false)
+  // Progress tracking
+  startDate   DateTime @default(now())
+  completionDate DateTime?
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module      LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@map("learning_pathways")
+}
+
+// Courses map CBSE/NCERT curriculum to modules/lessons
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  gradeLevel  String   // e.g., "Class 6", "Class 10"
+  subject     String   // e.g., "Disaster Management"
+  description String?
+  tags        String?  // JSON array of tags
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  courseModules CourseModule[]
+
+  @@map("courses")
+}
+
+// Junction between Course and LearningModule with ordering and core/elective flags
+model CourseModule {
+  id        String         @id @default(cuid())
+  courseId  String
+  moduleId  String
+  order     Int            @default(1)
+  isCore    Boolean        @default(true)
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module    LearningModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, moduleId])
+  @@map("course_modules")
+}
+
+// Quiz associated with a Lesson or a Module
+model Quiz {
+  id           String         @id @default(cuid())
+  title        String
+  description  String?
+  timeLimitSec Int?           // Optional time limit
+  totalPoints  Int            @default(0)
+  passingScore Int            @default(70)
+  isActive     Boolean        @default(true)
+
+  // Associations (either lesson or module based)
+  lessonId     String?
+  moduleId     String?
+  lesson       Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  module       LearningModule? @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  // Relations
+  questions    QuizQuestion[]
+  attempts     QuizAttempt[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id        String          @id @default(cuid())
+  quizId    String
+  text      String
+  type      QuizQuestionType @default(SINGLE_CHOICE)
+  points    Int             @default(1)
+  order     Int
+
+  quiz      Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options   QuizOption[]
+
+  @@map("quiz_questions")
+}
+
+model QuizOption {
+  id          String        @id @default(cuid())
+  questionId  String
+  text        String
+  isCorrect   Boolean       @default(false)
+
+  question    QuizQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_options")
+}
+
+// Tracks user attempts on quizzes
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int      @default(0)
+  maxScore    Int      @default(0)
+  passed      Boolean  @default(false)
+  responses   String?  // JSON array of user answers
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([quizId])
+  @@map("quiz_attempts")
+}
+
+model Alert {
+  id                   String              @id @default(cuid())
+  title                String
+  description          String
+  type                 AlertType
+  severity             AlertSeverity
+  region               String
+  issuedAt             DateTime            @default(now())
+  expiresAt            DateTime
+  status               AlertStatus         @default(ACTIVE)
+  actions              String? // JSON array of recommended actions
+  source               String?
+  contact              String?
+  // Enhanced regional support
+  geographicRegionId   String?
+  geographicRegion     GeographicRegion?   @relation(fields: [geographicRegionId], references: [id])
+  // Alert details
+  affectedAreas        String?             // JSON array of affected areas
+  evacuationRoutes     String?             // JSON array of evacuation routes
+  shelterLocations     String?             // JSON array of shelter locations
+  alertSubscriptions   AlertSubscription[]
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  @@map("alerts")
+}
+
+model AlertSubscription {
+  id        String    @id @default(cuid())
+  userId    String
+  alertId   String?
+  region    String?
+  alertType AlertType?
+  isActive  Boolean   @default(true)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alert     Alert?    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, alertId])
+  @@map("alert_subscriptions")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  senderId  String
+  receiverId String
+  content   String
+  type      String   @default("text")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model CallHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  number    String
+  duration  Int
+  type      String
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("call_history")
+}

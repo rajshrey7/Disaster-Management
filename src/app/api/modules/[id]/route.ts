@@ -10,7 +10,7 @@ export async function GET(
     const { searchParams } = new URL(request.url)
     const includeLessons = searchParams.get('includeLessons') === 'true'
 
-    const module = await db.learningModule.findUnique({
+    const moduleRecord = await db.learningModule.findUnique({
       where: { id: params.id },
       include: {
         lessons: includeLessons ? {
@@ -19,14 +19,14 @@ export async function GET(
       }
     })
 
-    if (!module) {
+    if (!moduleRecord) {
       return NextResponse.json(
         { error: 'Module not found' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(module)
+    return NextResponse.json(moduleRecord)
   } catch (error) {
     console.error('Error fetching module:', error)
     return NextResponse.json(
